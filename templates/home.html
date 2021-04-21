@@ -1,0 +1,149 @@
+{% extends 'shared/MainLayout.html' %}
+{% load static %}
+{% block content %}
+    <!--logo-->
+    <div class="row">
+        <div class="text-center">
+            <img src="
+         {{ setting.logo_img.url }}"
+                 alt="..." id="logo-img">
+        </div>
+    </div>
+    <!--end logo-->
+    <!--content 1-->
+    <div class="container">
+        <div class="row mt-3">
+            <div class="col-lg-8">
+                <div class="text-center">
+                    <img src="{{ setting.larger_image.url }}"
+                         class="" alt="..." id="home-img-large">
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="row">
+                    <div class="text-center">
+                        <img src="{{ setting.little_image_first.url }}"
+                             class="home-img-small" alt="...">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="text-center">
+                        <img src="{{ setting.little_image_second.url }}"
+
+                             class="home-img-small" alt="...">
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!--end content 1-->
+    <!--content 2-->
+    <div class="container mt-4">
+        <div class="row">
+            <!--new posts-->
+            <div class="col-lg-8">
+                <div class="row mb-2">
+                    <h4 class="text-center home-new-post-title">جدیدترین خبرها</h4>
+                </div>
+                <div class="row row-cols-1 row-cols-md-2 g-4">
+                    {% for post in new_posts %}
+                        <div class="col">
+                            <div class="card">
+                                <img src="{{ post.image.image_1.url }}"
+                                     class="card-img-top" alt="{{ post.title }}">
+                                <div class="card-body">
+                                    <h5 class="card-title home-new-post-title">
+
+                                        {{ post.title }}<span class="badge bg-success">{{ post.categories_post }}</span>
+                                    </h5>
+
+                                    <p class="card-text home-new-post-description">
+                                        {{ post.content|slice:'100' }}
+                                        ...
+                                        <a href="{{ post.get_absolute_url }}">ادامه مطلب</a>
+                                    </p>
+                                    <p class="text-muted text-center">
+                                        {{ post.date_added|date:'Y/m/d' }}
+                                        توسط {{ post.author.first_name }} {{ post.author.last_name }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <!--end new posts-->
+            <div class="col-lg-4 mt-5">
+                <div class="card">
+                    <div class="card-header text-center">
+                        دسته‌بندی خبرها
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        {% for category, count in count_post_categories.items %}
+                            <a href="{% url 'post_category' category %}" style="text-decoration: none !important;">
+                                <li class="list-group-item">{{ category }}
+                                    <span class="badge rounded-pill bg-primary float-end">{{ count }}</span>
+                                </li>
+                            </a>
+                        {% endfor %}
+                    </ul>
+                </div>
+{#                <div class="card mt-3">#}
+{#                    <div class="card-header text-center">#}
+{#                        دسته‌بندی خبرها#}
+{#                    </div>#}
+{#                    <ul class="list-group list-group-flush">#}
+{#                        <li class="list-group-item">ورزشی#}
+{#                            <span class="badge rounded-pill bg-primary float-end">12</span>#}
+{#                        </li>#}
+{#                        <li class="list-group-item">هنری#}
+{#                            <span class="badge rounded-pill bg-primary float-end">4</span>#}
+{#                        </li>#}
+{#                        <li class="list-group-item">تکنولوژی#}
+{#                            <span class="badge rounded-pill bg-primary float-end">8</span>#}
+{#                        </li>#}
+{#                    </ul>#}
+{#                </div>#}
+            </div>
+        </div>
+    </div>
+    <!--end  content 2-->
+    <!--content 3-->
+    <div class="container">
+        <div class="row">
+            <div class="row mt-3 mb-3">
+                <h5 class="home-new-post-title text-center">محبوب‌ ترین‌ها</h5>
+            </div>
+            {% for post in most_like %}
+                <div class="col-lg-6">
+                    <div class="card mb-3">
+                        <div class="row g-0">
+                            <div class="col-md-4">
+                                <img src="{{ post.image.image_1.url }}"
+                                     alt="{{ post.title }}" class="home-img-most-visited">
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <h5 class="card-title home-new-post-title">{{ post.title }}<span
+                                            class="badge bg-primary">{{ post.categories_post }}</span></h5>
+                                    <p class="card-text home-most-visited-post-description">
+                                        {{ post.content|slice:'30' }}
+                                        ...
+                                        <a href="{{ post.get_absolute_url }}">ادامه مطلب</a>
+                                    </p>
+                                    <p class="card-text"><small class="text-muted">
+                                        {{ post.date_added|date:'Y/m/d' }}
+                                        توسط {{ post.author.first_name }} {{ post.author.last_name }}
+                                    </small>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <!--end content 3-->
+{% endblock content %}

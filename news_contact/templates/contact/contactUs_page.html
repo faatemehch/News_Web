@@ -1,0 +1,45 @@
+{% extends 'shared/MainLayout.html' %}
+{% block content %}
+    <!--contact us form-->
+    <div class="container">
+        <h2>تماس باما</h2>
+        <form method="post" id="contact_us" class="shadow">
+            {% csrf_token %}
+            {% for _, value in contact_form.errors.items %}
+                <span class="fieldWrapper" style="color: turquoise">
+                    {{ value }}
+                </span>
+            {% endfor %}
+            <div class="row">
+                <div class="col-lg-6">
+                    <label>{{ contact_form.user_name.label }}</label>
+                    <br>
+                    {{ contact_form.user_name }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6">
+                    <label>{{ contact_form.email.label }}</label>
+                    <br>
+                    {{ contact_form.email }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6">
+                    <label>{{ contact_form.title.label }}</label>
+                    <br>
+                    {{ contact_form.title }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6">
+                    <label>{{ contact_form.text.label }}</label>
+                    <br>
+                    {{ contact_form.text }}
+                </div>
+            </div>
+            <button class="btn btn-block mt-4"> ارسال پیام</button>
+        </form>
+    </div>
+    <!--end contact us form-->
+{% endblock %}

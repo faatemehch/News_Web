@@ -1,0 +1,38 @@
+{% extends 'shared/MainLayout.html' %}
+{% block content %}
+    <div class="container mb-5">
+        <div class="row mb-3">
+            <h4 class="home-new-post-title text-center">{{ title }}</h4>
+        </div>
+        <form id="add_edit_form" class="shadow" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div class="row">
+                <div class="col-lg-6">
+                    <label>عنوان خبر:</label>
+                    {{ form.title }}
+                </div>
+                <div class="col-lg-6">
+                    <label>دسته‌بندی:</label>
+                    {{ form.categories_post }}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-6">
+                    <label>افزودن تصویر:</label>
+                    {{ image_form.image_1 }}
+                </div>
+                <div class="col-lg-6">
+                    <label>افزودن تصویر:</label>
+                    {{ image_form.image_2 }}
+                </div>
+            </div>
+            <div class="row">
+                <label>متن خبر:</label>
+                {{ form.content }}
+            </div>
+            <button class="btn btn-block mt-4" type="submit">ثبت خبر</button>
+        </form>
+    </div>
+{% endblock %}

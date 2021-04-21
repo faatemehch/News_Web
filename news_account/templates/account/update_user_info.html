@@ -1,0 +1,49 @@
+{% extends 'shared/MainLayout.html' %}
+{% block content %}
+    <div class="container mb-5">
+        <div class="row mb-3">
+            <h4 class="home-new-post-title text-center">ویرایش حساب کاربری</h4>
+        </div>
+        <form id="edit_user_info" class="shadow" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-lg-6">
+                    <label>نام:</label>
+                    <br>
+                    {{ user_form_1.first_name }}
+                </div>
+                <div class="col-lg-6">
+                    <label>نام خانوادگی:</label>
+                    <br>
+                    {{ user_form_1.last_name }}
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6">
+                    <label>ایمیل:</label>
+                    <br>
+                    {{ user_form_1.email }}
+                </div>
+                <div class="col-lg-6">
+                    <label class="">تحصیلات:</label>
+                    <br>
+                    {{ user_form_2.education }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6">
+                    <label class="">سن:</label>
+                    <br>
+                    {{ user_form_2.age }}
+                </div>
+                <div class="col-lg-6 mt-2">
+                    <label class="">تصویر:</label>
+                    <br>
+                    {{ user_form_2.image }}
+                </div>
+                <button class="btn btn-block mt-4">اعمال تغییرات</button>
+            </div>
+        </form>
+    </div>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% load static %}
+{% load render_partial %}
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    {% include 'shared/_Header.html' %}
+    <meta charset="UTF-8">
+    <title>سایت خبری | {{ title }}</title>
+</head>
+<body>
+<!--header-->
+{#{% include 'shared/header.html' %}#}
+{% render_partial 'news_web.views.header' %}
+<!--end header-->
+
+{% block content %}
+{% endblock content %}
+
+<!--footer-->
+{#{% include 'shared/footer.html' %}#}
+{% render_partial 'news_web.views.footer' %}
+<!--end footer-->
+{% include 'shared/_Footer.html' %}
+</body>
+</html>

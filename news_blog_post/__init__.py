@@ -1,0 +1,1 @@
+default_app_config = 'news_blog_post.apps.NewsBlogPostConfig'

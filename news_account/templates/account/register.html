@@ -1,0 +1,39 @@
+{% extends 'shared/MainLayout.html' %}
+{% block content %}
+    <!--register form-->
+    <div class="login-box">
+        <h2>ثبت نام</h2>
+        <form method="post">
+            {% csrf_token %}
+            {% for _, value in register_form.errors.items %}
+                <span class="fieldWrapper" style="color: turquoise">
+                    {{ value }}
+                </span>
+            {% endfor %}
+            <div class="user-box">
+                {{ register_form.user_name }}
+                <label> {{ register_form.user_name.label }}</label>
+            </div>
+            <div class="user-box">
+                {{ register_form.email }}
+                <label> {{ register_form.email.label }}</label>
+            </div>
+            <div class="user-box">
+                {{ register_form.password }}
+                <label> {{ register_form.password.label }}</label>
+            </div>
+            <div class="user-box">
+                {{ register_form.re_password }}
+                <label> {{ register_form.re_password.label }}</label>
+            </div>
+            <button href="#">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                ثبت نام
+            </button>
+        </form>
+    </div>
+    <!--end register form-->
+{% endblock %}

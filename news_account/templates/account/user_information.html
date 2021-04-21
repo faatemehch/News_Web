@@ -1,0 +1,201 @@
+{% extends 'shared/MainLayout.html' %}
+{% block content %}
+    <div id="box">
+        <div class="container">
+            <h5 class="home-new-post-title">اطلاعات کاربری</h5>
+            <div class="user-info">
+                {% if user_info.image %}
+                    <img src="{{ user_info.image.url }}"
+                         class="rounded mx-auto d-block user-info-img mt-2" alt="{{ user_info_user.username }}">
+                {% endif %}
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th scope="col">نام</th>
+                        <th scope="col">نام خانوادگی</th>
+                        <th scope="col">سن</th>
+                        <th scope="col">تعداد پست‌ها</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>{{ user_info.user.first_name }}</td>
+                        <td>{{ user_info.user.last_name }}</td>
+                        <td>{{ user_info.age }}</td>
+                        <td>{{ sets.paginator.count }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+
+            </div>
+            {% if request.user == user_info.user %}
+                <div class="user-info">
+                    <a href="{% url 'update_user_info' request.user.id %}" class="">
+                        <h3>ویرایش حساب کاربری<i class='far fa-edit'
+                                                 style='font-size:24px;color: blue'> </i>
+                        </h3>
+                    </a>
+                </div>
+                <div class="user-info">
+                    <a href="{% url 'post-create' %}" class="">
+                        <h3>افزودن خبر جدید
+                            <i class='fas fa-plus' style='font-size:24px; color: darkmagenta'></i>
+                        </h3>
+                    </a>
+                </div>
+            {% endif %}
+            <div class="container mt-4">
+                <div class="row">
+                    <h3 class="home-new-post-title text-center">لیست خبرهای من</h3>
+                </div>
+                <div class="row mt-3" id="posts">
+
+                    {% for post in object_list %}
+                        <div class="card mb-3 col-lg-4 list-card shadow">
+                            <div class="card-header">{{ post.date_added|date:'H:i-Y/m/d' }}
+                                توسط
+                                {{ post.author.first_name }} {{ post.author.last_name }}
+                                <span class="badge list-badge">جدید</span>
+                                <span class="badge list-pack-badge">ورزشی</span>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">{{ post.title|slice:'25' }}</h5>
+                                <p class="card-text">
+                                    {{ post.content|truncatechars:90 }}...
+                                    <a href="{% url 'post_detail' post.id %}">ادامه مطلب</a>
+                                </p>
+                            </div>
+                            <div class="card-footer">
+                                <a href="{% url 'post-update' post.id %}">ویرایش<i class='far fa-edit'
+                                                                                   style='font-size:13px;color: blue'>
+                                </i>
+                                </a>
+                                <a href="#" class="float-end" data-bs-toggle="modal"
+                                   data-bs-target="#exampleModal{{ post.id }}">حذف<i class='far fa-trash-alt'
+                                                                                     style='font-size:13px;color: red'>
+                                </i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="modal fade" id="exampleModal{{ post.id }}" tabindex="-1"
+                             aria-labelledby="exampleModalLabel"
+                             aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-body">
+                                        آیا می‌خواهید این خبر را حذف کنید؟
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">خیر
+                                        </button>
+                                        <form method="post"
+                                              action="{% url 'post-delete' post.id %}?next={{ request.path|urlencode }}">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-primary">
+                                                بله
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <!--    <div class="row">-->
+                {% if is_paginated %}
+                    <ul class="pagination modal-5">
+                        {% if  sets.has_previous %}
+                            <li><a class="prev fa fa-arrow-left active" id="previous_button"
+                                   onclick="go_to_first_last(1)">اول</a>
+                            </li>
+                        {% else %}
+                            <li><a class="prev fa fa-arrow-left active disabled">اول</a>
+                            </li>
+                        {% endif %}
+                        {% for page in paginator.page_range %}
+                            {% if page == sets.number %}
+                                <li><a class="active">{{ page }}</a></li>
+                            {% elif page > page_obj.number|add:'-3' and page < page_obj.number|add:'3' %}
+                                <li><a id="other_page"
+                                       onclick="go_to_other_page ({{ page }})">{{ page }}</a></li>
+                            {% endif %}
+                        {% endfor %}
+                        {% if sets.has_next %}
+                            <li><a class="next fa fa-arrow-right active disabled active" id="next_button"
+                                   onclick="go_to_first_last({{ page_obj.paginator.num_pages }})">آخر</a>
+                            </li>
+                        {% else %}
+                            <li><a class="next fa fa-arrow-right active disabled active disabled">آخر</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                {% endif %}
+
+            </div>
+
+
+        </div>
+    </div>
+    <script>
+
+
+        {#function delete_post(e) {#}
+        {#    $.ajax({#}
+        {#        type: 'POST',#}
+        {#        url: this.action,#}
+        {#        data: {#}
+        {#            'id': e,#}
+        {#        },#}
+        {#        success: function (data) {#}
+        {#            if (data.deleted) {#}
+        {#                $("#box #posts" + id).remove();#}
+        {#            }#}
+        {#        },#}
+        {#    })#}
+        {#}#}
+
+            function go_to_first_last(e) {
+                $('#previous_button').ready(function () {
+                    page = e
+                    $.ajax({
+                        type: "GET",
+                        url: this.href,
+                        data: {
+                            page: page
+                        },
+                        success: function (data) {
+                            {#$('#box').html(data)#}
+                            $('#box').empty()
+                            $('#box').append($(data).filter('#box').html())
+                        },
+                        error: function (data) {
+                            alert(data)
+                        }
+                    });
+                });
+            }
+
+            function go_to_other_page(e) {
+                $('#other_page').ready(function () {
+                    page = e
+                    $.ajax({
+                        type: "GET",
+                        url: this.href,
+                        data: {
+                            page: page
+                        },
+                        success: function (data) {
+                            {#$('#box').html(data)#}
+                            $('#box').empty()
+                            $('#box').append($(data).filter('#box').html())
+                        },
+                        error: function (data) {
+                            alert(data)
+                        }
+                    });
+                });
+            };
+
+    </script>
+{% endblock content %}

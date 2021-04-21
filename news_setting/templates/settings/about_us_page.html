@@ -1,0 +1,18 @@
+{% extends 'shared/MainLayout.html' %}
+{% block content %}
+    <!--about us text-->
+    <div class="container">
+        <div class="row">
+            <h2 class="text-center home-new-post-title">درباره ما</h2>
+            <div class="text-center">
+                <img class="about-img mb-4"
+                     src="{{ about_us.about_img.url }}">
+            </div>
+            <p>
+                {{ about_us.about_text }}
+            </p>
+
+        </div>
+    </div>
+    <!--end about us text-->
+{% endblock %}

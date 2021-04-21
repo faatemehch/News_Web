@@ -1,0 +1,148 @@
+{% extends 'shared/MainLayout.html' %}
+{% block content %}
+    <div id="box">
+        <!--news description-->
+        <div class="container">
+            <div class="row mb-3">
+                <h3 class="home-new-post-title">{{ object.title }}</h3>
+            </div>
+            <div class="row">
+                {#                {% for simage in object.image.all|slice:'0:1' %}#}
+                {#                    {% if simage.image %}#}
+                {#                        <div class="text-center">#}
+                {#                            <img src="{{ simage.image.url }}" class="img-fluid single-news-img" alt="{{ post.title }}">#}
+                {#                        </div>#}
+                {#                    {% endif %}#}
+                {#                {% endfor %}#}
+                <div class="text-center">
+                    <img src="{{ object.image.image_1.url }}" class="img-fluid single-news-img" alt="{{ post.title }}">
+                </div>
+                <div class="mt-4">
+                    <div class="mb-4">
+                        <h6 class="text-muted mb-5">
+                            تاریخ انتشار: {{ object.date_added|date:'Y/m/d' }}
+                            توسط {{ object.author.first_name }} {{ object.author.last_name }}
+                        </h6>
+                        <p class="text-center">نظر دهید:</p>
+                        <a href="{% url 'post-like' object.id 'True' %}">
+                            <i class="fa fa-thumbs-up" style="font-size:24px; color: green"></i>
+                        </a>
+                        <a href="{% url 'post-like' object.id 'False' %}">
+                            <i class="fa fa-thumbs-down" style="font-size:24px; color: red"></i>
+                        </a>
+                    </div>
+                    <p>
+                        {{ object.content|slice:':500' }}
+                    </p>
+                    <div class="text-center">
+                        <img src="{{ object.image.image_2.url }}"
+                             class="img-fluid single-news-img" alt="{{ object.title }}">
+                        {#                        {% for simage in object.image.all|slice:'1:' %}#}
+                        {#                            {% if simage.image %}#}
+                        {#                                <img src="{{ simage.image.url }}"#}
+                        {#                                     class="img-fluid single-news-img" alt="{{ object.title }}">#}
+                        {#                            {% endif %}#}
+                        {#                        {% endfor %}#}
+                    </div>
+                    <p>
+                        {{ object.content|slice:'500:' }}
+                    </p>
+                </div>
+            </div>
+        </div>
+        <!--end news description-->
+        <!--user comments-->
+        <div class="container">
+            <hr>
+            <div class="row home-new-post-title mb-5">
+                <h4 class="text-center">نظرات کاربران
+                </h4>
+            </div>
+            <div class="row">
+                <div class="col-lg-6">
+                    {% for cmnt in page_obj %}
+                        <div class="row user-comment shadow">
+                            <h5>{{ cmnt.full_name }}</h5>
+                            <p>{{ cmnt.text }}</p>
+                        </div>
+                    {% endfor %}
+                    <div class="container">
+                        {% if is_paginated %}
+                            <ul class="pagination modal-5">
+                                {% if  sets.has_previous %}
+                                    <li><a class="prev fa fa-arrow-left active" onclick="go_to_other_page(1)">اول</a>
+                                    </li>
+                                {% else %}
+                                    <li><a class="prev fa fa-arrow-left active disabled">اول</a>
+                                    </li>
+                                {% endif %}
+                                {% for page in paginator.page_range %}
+                                    {% if page == sets.number %}
+                                        <li><a class="active">{{ page }}</a></li>
+                                    {% elif page > page_obj.number|add:'-2' and page < page_obj.number|add:'2' %}
+                                        <li><a onclick="go_to_other_page ({{ page }})">{{ page }}</a></li>
+                                    {% endif %}
+                                {% endfor %}
+                                {% if sets.has_next %}
+                                    <li><a class="next fa fa-arrow-right active disabled active"
+                                           onclick="go_to_other_page({{ page_obj.paginator.num_pages }})">آخر</a>
+                                    </li>
+                                {% else %}
+                                    <li><a class="next fa fa-arrow-right active disabled active disabled">آخر</a>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        {% endif %}
+                    </div>
+
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="comment-box">
+                        <h2>نظر شما</h2>
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="user-box">
+                                {{ comment_form.full_name }}
+                                <label>{{ comment_form.full_name.label }}</label>
+                            </div>
+                            <div class="user-box">
+                                {{ comment_form.text }}
+                                <label>{{ comment_form.text.label }}</label>
+                            </div>
+                            <button type="submit">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                                ثبت نظر
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--end user comments-->
+    </div>
+    <script>
+        function go_to_other_page(e) {
+            page = e
+            $.ajax({
+                type: "GET",
+                url: this.href,
+                data: {
+                    page: page
+                },
+                success: function (data) {
+                    {#$('#box').html(data)#}
+                    $('#box').empty()
+                    $('#box').append($(data).filter('#box').html())
+                },
+                error: function (data) {
+                    alert(data)
+                }
+            });
+        };
+
+    </script>
+{% endblock %}
