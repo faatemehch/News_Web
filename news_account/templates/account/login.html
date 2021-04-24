@@ -1,33 +1,35 @@
 {% extends 'shared/MainLayout.html' %}
 {% block content %}
-    <div class="login-box mt-3">
+    <div class="mt-3">
         <h2>ورود</h2>
-        <form method="post">
+        <form method="post" id="login-box" class="shadow">
             {% csrf_token %}
             {% for key, value in login_from.errors.items %}
-                <span class="fieldWrapper" style="color: turquoise">
+                <span class="fieldWrapper" style="color: red">
                     {{ value }}
                 </span>
             {% endfor %}
-            <div class="user-box">
-                {{ login_from.user_name }}
-                <label>{{ login_from.user_name.label }}</label>
+            <div class="row">
+                <div class="col-lg-6">
+                    <label>{{ login_from.user_name.label }}</label>
+                    {{ login_from.user_name }}
+                </div>
             </div>
-            <div class="user-box">
-                {{ login_from.password }}
-                <label>{{ login_from.password.label }}</label>
+            <div class="row">
+                <div class="col-lg-6">
+                    <label>{{ login_from.password.label }}</label>
+                    {{ login_from.password }}
+                </div>
             </div>
-            <div class="user-box">
-                {{ login_from.captcha }}
+            <div class="row">
+                <div class="col-lg-6">
+                    {{ login_from.captcha }}
+                </div>
             </div>
             <div class="form-check">
                 <a href="{% url 'password-reset' %}">فراموشی رمز عبور</a>
             </div>
             <button class="button btn" type="submit">
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
                 ورود
             </button>
         </form>

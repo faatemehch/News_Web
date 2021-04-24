@@ -1,7 +1,7 @@
 import jdatetime
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.http import HttpResponseRedirect
@@ -44,15 +44,18 @@ class PostDetailView( DetailView, MultipleObjectMixin ):
 
     def post(self, request, *args, **kwargs):
         comment_form = self.form_class( request.POST )
-        if comment_form.is_valid():
-            full_name = comment_form.cleaned_data.get( 'full_name' )
-            text = comment_form.cleaned_data.get( 'text' )
-            Comment_Post.objects.create( post_id=self.kwargs.get( 'pk' ),
-                                         owner_id=self.request.user.id,
-                                         full_name=full_name,
-                                         text=text,
-                                         date_added=jdatetime.datetime.now() )
-            return HttpResponseRedirect( request.META.get( 'HTTP_REFERER' ) )
+        if request.user.is_authenticated:
+            if comment_form.is_valid():
+                full_name = comment_form.cleaned_data.get( 'full_name' )
+                text = comment_form.cleaned_data.get( 'text' )
+                Comment_Post.objects.create( post_id=self.kwargs.get( 'pk' ),
+                                             owner_id=self.request.user.id,
+                                             full_name=full_name,
+                                             text=text,
+                                             date_added=jdatetime.datetime.now() )
+                return HttpResponseRedirect( request.META.get( 'HTTP_REFERER' ) )
+        else:
+            return redirect('login')
 
     def get_context_data(self, *args, **kwargs):
         post = Post.objects.get_post_by_id( self.kwargs.get( 'pk' ) )
